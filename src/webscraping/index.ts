@@ -11,8 +11,8 @@ async function main() {
     defaultViewport: { height: 1080, width: 1920 },
   });
   
-  // await insertAllPlayers(browser, "bigten");
-  // await updateAndAddPlayers(browser, "bigten");
+  await insertAllPlayers(browser, "bigten");
+  await updateAndAddPlayers(browser, "bigten");
 
   console.log("Finished inserting/updating players");
   await browser.close();

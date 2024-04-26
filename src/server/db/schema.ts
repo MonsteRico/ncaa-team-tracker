@@ -26,6 +26,7 @@ export const colleges = createTable("colleges", {
   logo: varchar("logo"),
   conference: varchar("conference").notNull(),
   fullConference: varchar("fullConference"),
+  teamName: varchar("teamName"),
 });
 
 

@@ -15,7 +15,7 @@ export default async function HomePage({
   const search = searchParams?.search as string | undefined;
   const allColleges = await db.select().from(colleges);
   const fuse = new Fuse(allColleges, {
-    keys: ["conference", "fullConference", "name"],
+    keys: ["conference", "fullConference", "name", "teamName"],
   });
   const fuseItems = fuse.search(search ?? "");
 
@@ -31,7 +31,7 @@ export default async function HomePage({
             <FlagIcon className="h-6 w-6" />
           </Link>
           <h1 className="text-lg font-semibold tracking-tight">
-            NCAA Basketball Teams
+            NCAA Team Tracker
           </h1>
         </div>
         <Search className="ml-auto hidden md:block" />

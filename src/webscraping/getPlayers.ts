@@ -352,6 +352,24 @@ export async function getRoster(
 
   const players: InsertPlayer[] = [];
 
+  const fullTeamName = await page.$eval(".stats-page__heading", (h1) =>
+    h1.textContent!.trim(),
+  );
+
+  // take off the first five characters and the last 18 characters to get the team name
+  const teamName = fullTeamName.slice(5, -18);
+
+  if (teamName) {
+    console.log("Updating team name for", college.name, "to", teamName);
+    await db
+      .update(colleges)
+      .set({ teamName })
+      .where(eq(colleges.collegeId, college.collegeId));
+  } else {
+    console.log("weird team name", fullTeamName);
+    console.log("regex", teamName);
+  }
+
   const playerRows = await page.$$("tbody tr");
   const numPlayers = playerRows.length / 2;
   for (let i = 0; i < numPlayers; i++) {
