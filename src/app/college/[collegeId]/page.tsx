@@ -1,31 +1,20 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import { Button } from "@/components/ui/button";
 import {
   ArrowRight,
-  BriefcaseIcon,
-  ChevronLeftIcon,
-  ChevronRightIcon,
   Dot,
-  FlagIcon,
+  GraduationCap,
   StarIcon,
 } from "lucide-react";
-import { Player, colleges, players, type College } from "@/server/db/schema";
+import { type Player, colleges, players } from "@/server/db/schema";
 import { db } from "@/server/db";
-import Fuse from "fuse.js";
-import { Search } from "@/components/search";
 
-import {
-  TableHead,
-  TableRow,
-  TableHeader,
-  TableCell,
-  TableBody,
-  Table,
-} from "@/components/ui/table";
-import { and, eq, isNotNull, isNull, ne } from "drizzle-orm";
+import { and, eq, isNotNull, isNull } from "drizzle-orm";
 import { cn, playerPositionToFull } from "@/lib/utils";
 import { TeamPageFilters } from "@/components/team-page-filters";
+import Image from "next/image";
+import { TooltipContent, Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { ThemeToggle } from "@/components/theme-toggle";
 
 export default async function TeamPage({
   params,
@@ -71,11 +60,9 @@ export default async function TeamPage({
   let filteredPlayers: Player[];
   if (searchParams?.filter === "transfers") {
     filteredPlayers = incomingTransfers;
-  }
-  else if (searchParams?.filter === "signees") {
+  } else if (searchParams?.filter === "signees") {
     filteredPlayers = incomingSignees;
-  }
-  else {
+  } else {
     filteredPlayers = allPlayers;
   }
   const outgoingTransfers = await db
@@ -89,15 +76,22 @@ export default async function TeamPage({
 
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <header className="flex h-16 shrink-0 items-center border-b px-4 md:px-6">
+      <header className="flex h-16 shrink-0 items-center border-b px-4 md:px-6 justify-between">
         <div className="flex items-center gap-4">
           <Link className="shrink-0" href="/">
-            <FlagIcon className="h-6 w-6" />
+            <Image
+              src="/basketball.png"
+              alt="A basketball"
+              className="h-8 w-8 dark:invert"
+              height={24}
+              width={24}
+            />
           </Link>
           <h1 className="text-lg font-semibold tracking-tight">
             NCAA Team Tracker
           </h1>
         </div>
+        <ThemeToggle/>
       </header>
       <main className="flex-1 p-4 md:p-6">
         <div className="space-y-4">
@@ -169,7 +163,7 @@ function PlayerCard({
   return (
     <div
       className={cn(
-        "m-1 flex items-center space-x-3 rounded-sm p-2",
+        "m-1 flex items-center space-x-3 rounded-sm p-2 transition",
         player.playerPage && "hover:bg-muted",
       )}
     >
@@ -177,7 +171,7 @@ function PlayerCard({
         alt={player.name + " photo"}
         className="h-24 w-24 rounded-full object-cover object-top"
         height="80"
-        src={player.image ?? "/placeholder.svg"}
+        src={player.image ?? "/player-placeholder.jpg"}
         width="80"
       />
       <div className="space-y-1">
@@ -254,8 +248,8 @@ async function CollegeIcon({ collegeId }: { collegeId: string }) {
   if (collegeId == "life") {
     return (
       <div className="flex flex-row items-center space-x-2">
-        <BriefcaseIcon className="h-8 w-8" />
-        <p className="text-sm text-muted-foreground">(Life)</p>
+        <GraduationCap className="h-8 w-8" />
+        <p className="text-sm text-muted-foreground">(Graduated)</p>
       </div>
     );
   }
@@ -277,14 +271,25 @@ async function CollegeIcon({ collegeId }: { collegeId: string }) {
   }
 
   return (
-    <Link href={`/college/${collegeId}`}>
-      <img
-        alt={`${college.name} logo`}
-        className="h-8 w-8"
-        src={
-          college.logo && college.logo != "" ? college.logo : "/placeholder.svg"
-        }
-      />
-    </Link>
+    <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Link href={`/college/${collegeId}`}>
+            <img
+              alt={`${college.name} logo`}
+              className="h-8 w-8"
+              src={
+                college.logo && college.logo != ""
+                  ? college.logo
+                  : "/placeholder.svg"
+              }
+            />
+          </Link>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>{college.teamName ?? college.name}</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
   );
 }

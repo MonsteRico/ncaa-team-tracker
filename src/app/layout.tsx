@@ -4,6 +4,7 @@ import { cn } from "@/lib/utils";
 import { Chivo } from "next/font/google";
 import { Archivo } from "next/font/google";
 import "@/styles/globals.css";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const chivo = Chivo({
   subsets: ["latin"],
@@ -31,12 +32,14 @@ export default function RootLayout({
     <html lang="en">
       <body
         className={cn(
-          "bg-background min-h-screen font-sans antialiased",
+          "min-h-screen bg-background font-sans antialiased transition duration-300",
           chivo.variable,
           archivo.variable,
         )}
       >
-        {children}
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -409,10 +409,26 @@ export async function getRoster(
       );
       playerId = getPlayerIdFromUrl(playerPage) ?? null;
     }
+    let image = null;
+    if (playerPage) {
+      await page.goto(playerPage, {
+        waitUntil: "domcontentloaded",
+      });
+      try {
+        const imageLink = await page.$eval(".jsonly", (img) =>
+          img.getAttribute("src"),
+        );
+        image = imageLink?.split("?")[0];
+        console.log("Got player image for", playerName, "-", image)
+      } catch (error) {
+        console.log("Error getting player image for", playerName);
+      }
+    }
+
     const player: InsertPlayer = {
       currentCollegeId: college.collegeId,
       highSchool: playerHighSchool != "-" ? playerHighSchool : null,
-      image: null,
+      image,
       name: playerName,
       nationalRating: null,
       newCollegeId: null,
@@ -424,6 +440,11 @@ export async function getRoster(
       status: "Signed",
     };
     players.push(player);
+    if (page.url() !== link!) {
+      await page.goto(link!, {
+        waitUntil: "domcontentloaded",
+      });
+    }
   }
 
   return players;

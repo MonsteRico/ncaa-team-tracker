@@ -1,5 +1,5 @@
 import puppeteer, { type Browser } from "puppeteer";
-import { eq } from "drizzle-orm";
+import { eq, or } from "drizzle-orm";
 import { colleges, players, type College } from "@/server/db/schema";
 import { db } from "@/server/db";
 import { getNewSignees, getRoster, getTransferredPlayers } from "./getPlayers";
@@ -11,8 +11,8 @@ async function main() {
     defaultViewport: { height: 1080, width: 1920 },
   });
   
-  // await insertAllPlayers(browser, "bigten");
-  await updateAndAddPlayers(browser, "bigten");
+  // await insertAllPlayers(browser);
+  await updateAndAddPlayers(browser);
 
   console.log("Finished inserting/updating players");
   await browser.close();
@@ -32,6 +32,17 @@ async function insertAllPlayers(browser: Browser, conference?: string) {
   }
 
   for (const college of allColleges) {
+    const collegesPlayers = await db.query.players.findMany({
+      where: or(eq(players.currentCollegeId, college.collegeId),
+        eq(players.newCollegeId, college.collegeId),
+        eq(players.previousCollegeId, college.collegeId))
+    });
+
+    if (collegesPlayers.length > 0) {
+      console.log("Players already exist for college:", college.name);
+      continue;
+    }
+
     console.log("Inserting players for college:", college.name);
     try {
       const roster = await getRoster(college, browser);

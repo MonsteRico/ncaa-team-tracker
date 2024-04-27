@@ -1,11 +1,13 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { ChevronLeftIcon, ChevronRightIcon, FlagIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
 import { colleges, type College } from "@/server/db/schema";
 import { db } from "@/server/db";
 import Fuse from "fuse.js";
 import { Search } from "@/components/search";
+import Image from "next/image";
+import { ThemeToggle } from "../components/theme-toggle";
 
 export default async function HomePage({
   searchParams,
@@ -28,11 +30,18 @@ export default async function HomePage({
       <header className="flex h-16 shrink-0 items-center border-b px-4 md:px-6">
         <div className="flex items-center gap-4">
           <Link className="shrink-0" href="/">
-            <FlagIcon className="h-6 w-6" />
+            <Image
+              src="/basketball.png"
+              alt="A basketball"
+              className="h-8 w-8 dark:invert"
+              height={24}
+              width={24}
+            />
           </Link>
           <h1 className="text-lg font-semibold tracking-tight">
             NCAA Team Tracker
           </h1>
+          <ThemeToggle />
         </div>
         <Search className="ml-auto hidden md:block" />
       </header>

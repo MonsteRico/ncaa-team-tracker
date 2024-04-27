@@ -1,13 +1,13 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
-import { useParams, usePathname, useRouter, useSearchParams } from "next/navigation";
+import {  usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useTransition } from "react";
 
 export function TeamPageFilters() {
   const router = useRouter();
   const pathname = usePathname();
-  const [isPending, startTransition] = useTransition();
+  const [_, startTransition] = useTransition();
   const allParams = useSearchParams();
 
   const handleFilter = (filter?: string) => {
@@ -30,7 +30,7 @@ export function TeamPageFilters() {
         }}
         size="sm"
         variant="outline"
-        className={cn(allParams.get("filter") == null && "bg-gray-100")}
+        className={cn(allParams.get("filter") == null && "bg-muted")}
       >
         All Players
       </Button>
@@ -38,7 +38,7 @@ export function TeamPageFilters() {
         onClick={() => handleFilter("signees")}
         size="sm"
         variant="outline"
-        className={cn(allParams.get("filter") == "signees" && "bg-gray-100")}
+        className={cn(allParams.get("filter") == "signees" && "bg-muted")}
       >
         New Signees
       </Button>
@@ -46,7 +46,7 @@ export function TeamPageFilters() {
         onClick={() => handleFilter("transfers")}
         size="sm"
         variant="outline"
-        className={cn(allParams.get("filter") == "transfers" && "bg-gray-100")}
+        className={cn(allParams.get("filter") == "transfers" && "bg-muted")}
       >
         Incoming Transfers
       </Button>
