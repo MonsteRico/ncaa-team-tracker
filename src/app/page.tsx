@@ -70,6 +70,10 @@ export default async function HomePage({
 }
 
 function CollegeCard({ college }: { college: College }) {
+  if (college.collegeId == "life") {
+    return null;
+  }
+
   return (
     <Link href={`/college/${college.collegeId}`}>
       <div className="flex items-center gap-4 object-fill">

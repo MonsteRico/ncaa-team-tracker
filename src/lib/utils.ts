@@ -77,3 +77,21 @@ export function conferenceAbbrevToFull(conference: string) {
       return conference;
   }
 }
+
+export function playerPositionToFull(position: string | null) {
+  switch (position) {
+    case "C":
+      return "Center";
+    case "F":
+    case "SF":
+    case "PF":
+      return "Forward";
+    case "G":
+    case "CG":
+    case "SG":
+    case "PG":
+      return "Guard";
+    default:
+      return position;
+  }
+}
