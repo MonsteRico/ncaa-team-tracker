@@ -5,6 +5,7 @@ import { Chivo } from "next/font/google";
 import { Archivo } from "next/font/google";
 import "@/styles/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Metadata } from "next";
 
 const chivo = Chivo({
   subsets: ["latin"],
@@ -17,10 +18,35 @@ const archivo = Archivo({
   variable: "--font-archivo",
 });
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "NCAA Team Tracker",
   description: "Track rosters of all NCAA CBB teams",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [
+    { rel: "icon", url: "/favicon.ico" },
+    {
+      rel: "apple-touch-icon",
+      sizes: "180x180",
+      url: "/apple-touch-icon.png",
+    },
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "32x32",
+      url: "/favicon-32x32.png",
+    },
+    {
+      rel: "icon",
+      type: "image/png",
+      sizes: "16x16",
+      url: "/favicon-16x16.png",
+    },
+    {
+      rel: "mask-icon",
+      url: "/safari-pinned-tab.svg",
+      color: "#5bbad5",
+    },
+  ],
+  manifest: "/site.webmanifest",
 };
 
 export default function RootLayout({
