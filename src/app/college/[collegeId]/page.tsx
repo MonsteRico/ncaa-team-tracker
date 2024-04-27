@@ -101,7 +101,7 @@ export default async function TeamPage({
       <main className="flex-1 p-4 md:p-6">
         <div className="space-y-4">
           <div className="space-y-2">
-            <div className="flex items-center">
+            <div className="flex items-center space-x-5">
               <img
                 alt={`${college.name} logo`}
                 className="h-32 w-32"
