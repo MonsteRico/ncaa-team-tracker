@@ -103,23 +103,6 @@ export default async function HomePage({
             <p>No colleges found</p>
           )}
         </div>
-        <div className="mt-4 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-2">
-            <Button size="icon" variant="outline">
-              <ChevronLeftIcon className="h-4 w-4" />
-              <span className="sr-only">Previous</span>
-            </Button>
-            <Button size="icon" variant="outline">
-              <ChevronRightIcon className="h-4 w-4" />
-              <span className="sr-only">Next</span>
-            </Button>
-          </div>
-          <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-            <span className="font-medium">1</span>
-            <span>of</span>
-            <span>10</span>
-          </div>
-        </div>
       </main>
     </div>
   );
