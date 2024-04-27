@@ -7,7 +7,7 @@ export async function getNewSignees(
   college: College,
   browser: Browser,
 ): Promise<InsertPlayer[]> {
-  const page = await browser.newPage();
+  const page = (await browser.pages())[0] ?? (await browser.newPage());
   await page.goto(
     `https://247sports.com/college/${college.collegeId}/season/2024-basketball/commits/`,
     {
@@ -91,7 +91,7 @@ export async function getTransferredPlayers(
   browser: Browser,
 ): Promise<InsertPlayer[]> {
   const players: InsertPlayer[] = [];
-  const page = await browser.newPage();
+  const page = (await browser.pages())[0] ?? (await browser.newPage());
   await page.goto(
     `https://247sports.com/college/${college.collegeId}/season/2024-basketball/transferportal/`,
     {
@@ -317,7 +317,7 @@ export async function getRoster(
   college: College,
   browser: Browser,
 ): Promise<InsertPlayer[]> {
-  const page = await browser.newPage();
+  const page = (await browser.pages())[0] ?? await browser.newPage();
   await page.goto(
     `https://247sports.com/college/purdue/team/purdue-boilermakers-basketball-84/roster/#bigten`,
     {

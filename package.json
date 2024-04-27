@@ -24,6 +24,7 @@
     "next": "^14.2.1",
     "next-themes": "^0.3.0",
     "postgres": "^3.4.3",
+    "posthog-js": "^1.130.0",
     "puppeteer": "^22.6.5",
     "react": "18.2.0",
     "react-dom": "18.2.0",

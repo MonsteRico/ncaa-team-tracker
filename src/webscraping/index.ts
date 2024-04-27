@@ -10,6 +10,7 @@ const erroredColleges: College[] = [];
 async function main() {
   const browser = await puppeteer.launch({
     defaultViewport: { height: 1080, width: 1920 },
+    headless: false,
   });
 
   // await insertAllPlayers(browser);
