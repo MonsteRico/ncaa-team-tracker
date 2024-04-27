@@ -7,6 +7,7 @@ import "@/styles/globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Metadata } from "next";
 import posthog from "posthog-js";
+import { CSPostHogProvider } from "./providers";
 
 const chivo = Chivo({
   subsets: ["latin"],
@@ -49,15 +50,12 @@ export const metadata: Metadata = {
   ],
   manifest: "/site.webmanifest",
 };
-posthog.init("phc_ndLsPjuRxVRsYEZWg97sfvHHSNWoEO3GUx05os7tf4U", {
-  api_host: "https://us.i.posthog.com",
-});
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  
   return (
     <html lang="en">
       <body
@@ -67,9 +65,11 @@ export default function RootLayout({
           archivo.variable,
         )}
       >
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
-          {children}
-        </ThemeProvider>
+        <CSPostHogProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            {children}
+          </ThemeProvider>
+        </CSPostHogProvider>
       </body>
     </html>
   );
