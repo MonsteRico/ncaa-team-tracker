@@ -272,6 +272,7 @@ export async function getTransferredPlayers(
       if (!newCollegeName) {
         throw new Error("Could not find new college name");
       }
+      console.log(newCollegeName)
       // find the college id of the previous college
       newCollege = await db.query.colleges.findFirst({
         where: eq(colleges.name, newCollegeName),

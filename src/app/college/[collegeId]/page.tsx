@@ -1,11 +1,6 @@
 /* eslint-disable @next/next/no-img-element */
 import Link from "next/link";
-import {
-  ArrowRight,
-  Dot,
-  GraduationCap,
-  StarIcon,
-} from "lucide-react";
+import { ArrowRight, Dot, GraduationCap, StarIcon } from "lucide-react";
 import { type Player, colleges, players } from "@/server/db/schema";
 import { db } from "@/server/db";
 
@@ -13,8 +8,14 @@ import { and, eq, isNotNull, isNull } from "drizzle-orm";
 import { cn, playerPositionToFull } from "@/lib/utils";
 import { TeamPageFilters } from "@/components/team-page-filters";
 import Image from "next/image";
-import { TooltipContent, Tooltip, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+  TooltipContent,
+  Tooltip,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { ThemeToggle } from "@/components/theme-toggle";
+import { updateAndAddPlayers } from "@/webscraping/insertAddCollege";
 
 export default async function TeamPage({
   params,
@@ -31,6 +32,10 @@ export default async function TeamPage({
     .select()
     .from(colleges)
     .where(eq(colleges.collegeId, collegeId));
+
+  if (!college) {
+    return null;
+  }
 
   const allPlayers = await db
     .select()
@@ -76,7 +81,7 @@ export default async function TeamPage({
 
   return (
     <div className="flex min-h-screen w-full flex-col">
-      <header className="flex h-16 shrink-0 items-center border-b px-4 md:px-6 justify-between">
+      <header className="flex h-16 shrink-0 items-center justify-between border-b px-4 md:px-6">
         <div className="flex items-center gap-4">
           <Link className="shrink-0" href="/">
             <Image
@@ -91,11 +96,31 @@ export default async function TeamPage({
             NCAA Team Tracker
           </h1>
         </div>
-        <ThemeToggle/>
+        <ThemeToggle />
       </header>
       <main className="flex-1 p-4 md:p-6">
         <div className="space-y-4">
           <div className="space-y-2">
+            <div className="flex items-center">
+              <img
+                alt={`${college.name} logo`}
+                className="h-32 w-32"
+                src={
+                  college.logo && college.logo != ""
+                    ? college.logo
+                    : "/placeholder.svg"
+                }
+              />
+              <div>
+                <h1 className="text-3xl font-bold">{college.name}</h1>
+                {college.teamName && <p className="text-muted-foreground">
+                  {college.teamName}
+                </p>}
+                <p className="text-muted-foreground">
+                  {college.fullConference ?? college.conference}
+                </p>
+              </div>
+            </div>
             <h1 className="text-3xl font-bold">Roster</h1>
           </div>
           <div className="space-y-4">

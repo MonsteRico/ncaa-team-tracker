@@ -4,15 +4,17 @@ import { colleges, players, type College } from "@/server/db/schema";
 import { db } from "@/server/db";
 import { getNewSignees, getRoster, getTransferredPlayers } from "./getPlayers";
 import { conferenceAbbrevToFull } from "@/lib/utils";
+import { insertPlayers, updateAndAddPlayers } from "./insertAddCollege";
 
 const erroredColleges: College[] = [];
 async function main() {
   const browser = await puppeteer.launch({
     defaultViewport: { height: 1080, width: 1920 },
   });
-  
+
   // await insertAllPlayers(browser);
-  await updateAndAddPlayers(browser);
+  await updateAndAddAllPlayers(browser);
+  
 
   console.log("Finished inserting/updating players");
   await browser.close();
@@ -33,9 +35,11 @@ async function insertAllPlayers(browser: Browser, conference?: string) {
 
   for (const college of allColleges) {
     const collegesPlayers = await db.query.players.findMany({
-      where: or(eq(players.currentCollegeId, college.collegeId),
+      where: or(
+        eq(players.currentCollegeId, college.collegeId),
         eq(players.newCollegeId, college.collegeId),
-        eq(players.previousCollegeId, college.collegeId))
+        eq(players.previousCollegeId, college.collegeId),
+      ),
     });
 
     if (collegesPlayers.length > 0) {
@@ -79,7 +83,7 @@ async function insertAllPlayers(browser: Browser, conference?: string) {
   await Bun.write(erroredCollegesFile, JSON.stringify(erroredColleges));
 }
 
-async function updateAndAddPlayers(browser: Browser, conference?: string) {
+async function updateAndAddAllPlayers(browser: Browser, conference?: string) {
   let allColleges = await db.select().from(colleges);
   if (conference) {
     allColleges = allColleges.filter(
@@ -91,6 +95,20 @@ async function updateAndAddPlayers(browser: Browser, conference?: string) {
     console.log("No colleges found for conference:", conference);
     return;
   }
+
+  // Filter out colleges that have been updated in the last 2 days
+  allColleges = allColleges.filter((college) => {
+    if (!college.lastUpdate) {
+      return true;
+    }
+    const lastUpdate = new Date(college.lastUpdate);
+    const today = new Date();
+    if (today.getMonth() !== lastUpdate.getMonth()) {
+      return true;
+    }
+    return today.getDate() - lastUpdate.getDate() > 1;
+  });
+
   for (const college of allColleges) {
     console.log("Updating players for college:", college.name);
     try {
@@ -119,6 +137,10 @@ async function updateAndAddPlayers(browser: Browser, conference?: string) {
           }
         }
       }
+      await db
+        .update(colleges)
+        .set({ lastUpdate: new Date().toISOString() })
+        .where(eq(colleges.collegeId, college.collegeId));
     } catch (e) {
       console.log("Error for college:", college.name);
       console.error(e);

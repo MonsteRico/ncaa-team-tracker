@@ -7,6 +7,7 @@ import {
   serial,
   varchar,
   integer,
+  date,
 } from "drizzle-orm/pg-core";
 
 /**
@@ -27,6 +28,7 @@ export const colleges = createTable("colleges", {
   conference: varchar("conference").notNull(),
   fullConference: varchar("fullConference"),
   teamName: varchar("teamName"),
+  lastUpdate: date("lastUpdate"),
 });
 
 

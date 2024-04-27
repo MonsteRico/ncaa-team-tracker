@@ -1263,6 +1263,11 @@
   ],
   "ovc": [
     {
+      "name": "Austin Peay",
+      "id": "austin-peay",
+      "logo": "https://s3media.247sports.com/Uploads/Assets/999/649/4649999.png"
+    },
+    {
       "name": "Arkansas-Little Rock",
       "id": "arkansas-little-rock",
       "logo": "https://s3media.247sports.com/Uploads/Assets/701/649/4649701.png"

@@ -21,6 +21,53 @@ export default async function HomePage({
   });
   const fuseItems = fuse.search(search ?? "");
 
+  // order allColleges so that power 5 conferences are first and then the rest are alphabetical
+  allColleges.sort((a, b) => {
+    if (a.conference === "acc") {
+      return -1;
+    }
+    if (b.conference === "acc") {
+      return 1;
+    }
+    if (a.conference === "bigten") {
+      return -1;
+    }
+    if (b.conference === "bigten") {
+      return 1;
+    }
+    if (a.conference === "big-12") {
+      return -1;
+    }
+    if (b.conference === "big-12") {
+      return 1;
+    }
+    if (a.conference === "big-east") {
+      return -1;
+    }
+    if (b.conference === "big-east") {
+      return 1;
+    }
+    if (a.conference === "sec") {
+      return -1;
+    }
+    if (b.conference === "sec") {
+      return 1;
+    }
+    if (a.conference === "pac-12") {
+      return -1;
+    }
+    if (b.conference === "pac-12") {
+      return 1;
+    }
+    if (a.conference < b.conference) {
+      return -1;
+    }
+    if (a.conference > b.conference) {
+      return 1;
+    }
+    return 0;
+  });
+
   const filteredColleges = search
     ? fuseItems.map((item) => item.item)
     : allColleges;
@@ -79,7 +126,7 @@ export default async function HomePage({
 }
 
 function CollegeCard({ college }: { college: College }) {
-  if (college.collegeId == "life") {
+  if (college.collegeId == "life" || college.collegeId == "nba") {
     return null;
   }
 
