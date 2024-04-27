@@ -70,6 +70,27 @@ export default async function TeamPage({
   } else {
     filteredPlayers = allPlayers;
   }
+
+  // move players that dont have a player page to the end, and then players without an image to the end. so it goes players with player page and image, players with player page and no image, players without player page and image, players without player page and no image
+  filteredPlayers.sort((a, b) => {
+    if (a.playerPage && b.playerPage) {
+      if (a.image && b.image) {
+        return 0;
+      }
+      if (a.image) {
+        return -1;
+      }
+      return 1;
+    }
+    if (a.playerPage) {
+      return -1;
+    }
+    if (b.playerPage) {
+      return 1;
+    }
+    return 0;
+  });
+
   const outgoingTransfers = await db
     .select()
     .from(players)
