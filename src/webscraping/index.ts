@@ -1,3 +1,4 @@
+/* eslint-disable */
 import puppeteer, { type Browser } from "puppeteer";
 import { eq, or } from "drizzle-orm";
 import { colleges, players, type College } from "@/server/db/schema";
@@ -10,11 +11,11 @@ const erroredColleges: College[] = [];
 async function main() {
   const browser = await puppeteer.launch({
     defaultViewport: { height: 1080, width: 1920 },
-    headless: false,
   });
 
   // await insertAllPlayers(browser);
   await updateAndAddAllPlayers(browser);
+  // await insertPlayers({browser, passInCollege: "kentucky"})
   
 
   console.log("Finished inserting/updating players");
@@ -43,8 +44,8 @@ async function insertAllPlayers(browser: Browser, conference?: string) {
       ),
     });
 
-    if (collegesPlayers.length > 0) {
-      console.log("Players already exist for college:", college.name);
+    if (collegesPlayers.length > 9) {
+      console.log("Definitely already have players for:", college.name);
       continue;
     }
 
@@ -64,6 +65,14 @@ async function insertAllPlayers(browser: Browser, conference?: string) {
           await db.insert(players).values(player);
         } else {
           console.log("Player already exists. Updating:", player.name);
+          // favor setting values to not null ones
+          for (const key in existingPlayer) {
+            // @ts-expect-error isk
+            if (player[key] === null && existingPlayer[key] !== null) {
+              // @ts-expect-error isk
+              player[key] = existingPlayer[key];
+            }
+          }
           await db
             .update(players)
             .set(player)
@@ -128,6 +137,14 @@ async function updateAndAddAllPlayers(browser: Browser, conference?: string) {
           // check if anything has changed
           player.id = existingPlayer.id;
           if (!deepEqual(existingPlayer, player)) {
+            // favor setting values to not null ones
+            for (const key in existingPlayer) {
+              // @ts-expect-error isk
+              if (player[key] === null && existingPlayer[key] !== null) {
+                // @ts-expect-error isk
+                player[key] = existingPlayer[key];
+              }
+            }
             console.log("Player already exists. Updating:", player.name);
             await db
               .update(players)

@@ -191,7 +191,7 @@ export async function getTransferredPlayers(
     const player: InsertPlayer = {
       name,
       position,
-      status,
+      status: "Committed",
       highSchool: null,
       currentCollegeId: college.collegeId,
       newCollegeId: college.collegeId,
@@ -286,7 +286,7 @@ export async function getTransferredPlayers(
     const player: InsertPlayer = {
       name,
       position,
-      status,
+      status: newCollege ? "Committed" : "Entered",
       highSchool: null,
       currentCollegeId:
         status === "Committed" && newCollege ? newCollege.collegeId : null,
