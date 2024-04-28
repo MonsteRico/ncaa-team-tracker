@@ -107,7 +107,7 @@ async function updateAndAddAllPlayers(browser: Browser, conference?: string) {
     if (today.getMonth() !== lastUpdate.getMonth()) {
       return true;
     }
-    return today.getDate() - lastUpdate.getDate() > 1;
+    return today.getDate() - lastUpdate.getDate() > 0;
   });
 
   for (const college of allColleges) {
