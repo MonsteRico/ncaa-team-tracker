@@ -13,9 +13,10 @@ async function main() {
     defaultViewport: { height: 1080, width: 1920 },
   });
 
-  // await insertAllPlayers(browser);
+  
   await updateAndAddAllPlayers(browser);
-  // await insertPlayers({browser, passInCollege: "kentucky"})
+  
+  // await updateAndAddPlayers({browser, passInCollege: "vermont"})
   
 
   console.log("Finished inserting/updating players");
@@ -119,8 +120,13 @@ async function updateAndAddAllPlayers(browser: Browser, conference?: string) {
     return today.getDate() - lastUpdate.getDate() > 0;
   });
 
-  for (const college of allColleges) {
-    console.log("Updating players for college:", college.name);
+  for (let i = 0; i < allColleges.length; i++) {
+    const college = allColleges[i];
+    if (!college) {
+      console.log("No college found for index:", i);
+      continue;
+    }
+    console.log("Updating players for college:", college.name, "-", i + 1, "of", allColleges.length);
     try {
       const newSignees = await getNewSignees(college, browser);
       const transferredPlayers = await getTransferredPlayers(college, browser);
@@ -151,7 +157,7 @@ async function updateAndAddAllPlayers(browser: Browser, conference?: string) {
               .set(player)
               .where(eq(players.playerId, player.playerId));
           } else {
-            console.log("Player already exists. No changes:", player.name);
+            // console.log("Player already exists. No changes:", player.name);
           }
         }
       }
